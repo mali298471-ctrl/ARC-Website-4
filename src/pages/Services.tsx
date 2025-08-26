@@ -19,7 +19,9 @@ import {
   TrendingUp,
   ChevronDown,
   ChevronUp,
-  FolderOpen
+  FolderOpen,
+  Phone,
+  Mail
 } from 'lucide-react';
 
 const Services = () => {
@@ -368,12 +370,27 @@ const Services = () => {
     return colors[color] || colors.blue;
   };
 
+  const getIconColor = (color) => {
+    const colors = {
+      blue: 'text-blue-600',
+      indigo: 'text-indigo-600',
+      green: 'text-green-600',
+      purple: 'text-purple-600',
+      orange: 'text-orange-600',
+      cyan: 'text-cyan-600',
+      red: 'text-red-600',
+      emerald: 'text-emerald-600',
+      pink: 'text-pink-600'
+    };
+    return colors[color] || colors.blue;
+  };
+
   const getThemeBackground = (theme) => {
     if (theme === 'uk') {
-      return 'bg-gradient-to-br from-red-50 via-white to-blue-50';
+      return 'bg-gradient-to-r from-red-50 via-white to-blue-50';
     }
     if (theme === 'usa') {
-      return 'bg-gradient-to-br from-blue-50 via-white to-red-50';
+      return 'bg-gradient-to-r from-blue-50 via-white to-red-50';
     }
     return 'bg-white';
   };
@@ -452,14 +469,14 @@ const Services = () => {
       </section>
 
       {/* Category Filter */}
-      <section className="py-8 bg-gray-50 border-b">
+      <section className="py-8 bg-gray-50 border-b sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap justify-center gap-3">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 text-sm ${
                   selectedCategory === category
                     ? 'bg-blue-600 text-white shadow-lg'
                     : 'bg-white text-gray-600 hover:bg-blue-50 hover:text-blue-600 shadow-sm'
@@ -472,9 +489,9 @@ const Services = () => {
         </div>
       </section>
 
-      {/* Services Grid */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Services Vertical List */}
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {filteredServices.length === 0 ? (
             <div className="text-center py-16">
               <Search className="h-16 w-16 text-gray-300 mx-auto mb-4" />
@@ -482,15 +499,14 @@ const Services = () => {
               <p className="text-gray-500">Try adjusting your search or filter criteria</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="space-y-6">
               {filteredServices.map((service, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ y: -5, scale: 1.02 }}
+                  transition={{ duration: 0.5, delay: index * 0.05 }}
                   className={`${getThemeBackground(service.theme)} ${getThemeBorder(service.theme)} rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden`}
                 >
                   {/* UK Flag Background */}
@@ -507,104 +523,107 @@ const Services = () => {
                     </div>
                   )}
 
-                  <div className="p-8 relative">
-                    {/* Icon */}
-                    <div className={`bg-gradient-to-br ${getColorClasses(service.color)} w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-lg`}>
-                      <service.icon className="h-8 w-8 text-white" />
-                    </div>
+                  <div className="p-6 relative">
+                    <div className="flex items-start space-x-6">
+                      {/* Icon */}
+                      <div className={`bg-gradient-to-br ${getColorClasses(service.color)} w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg`}>
+                        <service.icon className="h-8 w-8 text-white" />
+                      </div>
 
-                    {/* Category Badge */}
-                    <div className="mb-4">
-                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                        service.theme === 'uk' ? 'bg-red-100 text-red-800' :
-                        service.theme === 'usa' ? 'bg-blue-100 text-blue-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
-                        {service.category}
-                      </span>
-                    </div>
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        {/* Category Badge */}
+                        <div className="mb-3">
+                          <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                            service.theme === 'uk' ? 'bg-red-100 text-red-800' :
+                            service.theme === 'usa' ? 'bg-blue-100 text-blue-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}>
+                            {service.category}
+                          </span>
+                        </div>
 
-                    {/* Title */}
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">{service.title}</h3>
-                    
-                    {/* Description */}
-                    <p className="text-gray-600 mb-4 leading-relaxed">{service.description}</p>
+                        {/* Title and Description */}
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">{service.title}</h3>
+                        <p className="text-gray-600 mb-4 leading-relaxed">{service.description}</p>
 
-                    {/* Timeframe */}
-                    <div className="flex items-center text-sm text-blue-600 mb-4">
-                      <Clock className="h-4 w-4 mr-2" />
-                      <span>{service.timeframe}</span>
-                    </div>
+                        {/* Timeframe */}
+                        <div className="flex items-center text-sm text-blue-600 mb-4">
+                          <Clock className="h-4 w-4 mr-2" />
+                          <span className="font-medium">{service.timeframe}</span>
+                        </div>
 
-                    {/* Features Preview */}
-                    <div className="mb-6">
-                      <ul className="space-y-2">
-                        {service.features.slice(0, 3).map((feature, idx) => (
-                          <li key={idx} className="flex items-center text-sm text-gray-600">
-                            <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-                            <span>{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    {/* Expandable Details */}
-                    <AnimatePresence>
-                      {expandedService === index && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="mb-6 border-t pt-4"
-                        >
-                          {/* Required Documents */}
-                          <div className="mb-4">
-                            <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
-                              <FolderOpen className="h-4 w-4 mr-2 text-blue-600" />
-                              Required Documents:
-                            </h4>
-                            <ul className="space-y-1">
-                              {service.documents.map((doc, idx) => (
-                                <li key={idx} className="flex items-start text-sm text-gray-600">
-                                  <span className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                                  <span>{doc}</span>
-                                </li>
-                              ))}
-                            </ul>
+                        {/* Features Preview */}
+                        <div className="mb-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {service.features.map((feature, idx) => (
+                              <div key={idx} className="flex items-center text-sm text-gray-600">
+                                <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                                <span>{feature}</span>
+                              </div>
+                            ))}
                           </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                        </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex flex-col space-y-3">
-                      {/* Details Toggle Button */}
-                      <button
-                        onClick={() => setExpandedService(expandedService === index ? null : index)}
-                        className="flex items-center justify-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-all duration-300"
-                      >
-                        {expandedService === index ? (
-                          <>
-                            Hide Details
-                            <ChevronUp className="ml-2 h-4 w-4" />
-                          </>
-                        ) : (
-                          <>
-                            View Details
-                            <ChevronDown className="ml-2 h-4 w-4" />
-                          </>
-                        )}
-                      </button>
+                        {/* Expandable Details */}
+                        <AnimatePresence>
+                          {expandedService === index && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="mb-4 border-t pt-4"
+                            >
+                              {/* Required Documents */}
+                              <div>
+                                <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                                  <FolderOpen className="h-4 w-4 mr-2 text-blue-600" />
+                                  Required Documents:
+                                </h4>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                  {service.documents.map((doc, idx) => (
+                                    <div key={idx} className="flex items-start text-sm text-gray-600">
+                                      <span className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                      <span>{doc}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
 
-                      {/* CTA Button */}
-                      <a
-                        href="/contact"
-                        className={`inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r ${getColorClasses(service.color)} text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg`}
-                      >
-                        Get Started
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </a>
+                        {/* Action Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          {/* Details Toggle Button */}
+                          <button
+                            onClick={() => setExpandedService(expandedService === index ? null : index)}
+                            className="flex items-center justify-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-all duration-300"
+                          >
+                            {expandedService === index ? (
+                              <>
+                                Hide Details
+                                <ChevronUp className="ml-2 h-4 w-4" />
+                              </>
+                            ) : (
+                              <>
+                                View Details
+                                <ChevronDown className="ml-2 h-4 w-4" />
+                              </>
+                            )}
+                          </button>
+
+                          {/* CTA Button */}
+                          <a
+                            href="/contact"
+                            className={`inline-flex items-center justify-center px-6 py-2 bg-gradient-to-r ${getColorClasses(service.color)} text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg`}
+                          >
+                            Get Started
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </a>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -614,7 +633,105 @@ const Services = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Custom Service CTA Section */}
+      <section className="py-16 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+          }}></div>
+        </div>
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Can't Find Your Service?
+            </h2>
+            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              We provide custom solutions tailored to your specific business needs. Contact us for personalized consultation and specialized services.
+            </p>
+            
+            {/* Contact Options */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20"
+              >
+                <Phone className="h-8 w-8 text-blue-400 mx-auto mb-3" />
+                <h3 className="font-semibold mb-2">Call Us</h3>
+                <p className="text-gray-300 text-sm mb-3">Speak directly with our experts</p>
+                <a
+                  href="tel:+923077026707"
+                  className="text-blue-400 hover:text-blue-300 font-medium"
+                >
+                  +92 307 702 6707
+                </a>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20"
+              >
+                <MessageCircle className="h-8 w-8 text-green-400 mx-auto mb-3" />
+                <h3 className="font-semibold mb-2">WhatsApp</h3>
+                <p className="text-gray-300 text-sm mb-3">Quick consultation via chat</p>
+                <a
+                  href="https://wa.me/923077026707"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-green-400 hover:text-green-300 font-medium"
+                >
+                  Chat Now
+                </a>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20"
+              >
+                <Mail className="h-8 w-8 text-purple-400 mx-auto mb-3" />
+                <h3 className="font-semibold mb-2">Email Us</h3>
+                <p className="text-gray-300 text-sm mb-3">Detailed inquiry and consultation</p>
+                <a
+                  href="/contact"
+                  className="text-purple-400 hover:text-purple-300 font-medium"
+                >
+                  Send Message
+                </a>
+              </motion.div>
+            </div>
+
+            {/* Main CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.a
+                href="/contact"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                Request Custom Service
+              </motion.a>
+              <motion.a
+                href="https://wa.me/923077026707?text=Hi,%20I%20need%20a%20custom%20service%20that's%20not%20listed%20on%20your%20website."
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl inline-flex items-center justify-center"
+              >
+                <MessageCircle className="mr-2 h-5 w-5" />
+                WhatsApp for Custom Quote
+              </motion.a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Main CTA Section */}
       <section className="py-20 bg-blue-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
