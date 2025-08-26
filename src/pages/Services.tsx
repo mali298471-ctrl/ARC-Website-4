@@ -1,559 +1,415 @@
-// File: Services.tsx
-import React, { useMemo, useState } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import {
-  Building2,
-  Users,
-  FileText,
-  Calculator,
-  Scale,
-  Shield,
-  Globe,
-  Briefcase,
+import React, { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { 
+  Building2, 
+  Users, 
+  FileText, 
+  Calculator, 
+  Scale, 
+  Shield, 
+  Globe, 
+  Briefcase, 
   Search,
   Clock,
-  FileCheck2,
-  CheckCircle2,
-  X,
-} from "lucide-react";
+  CheckCircle,
+  ArrowRight,
+  MessageCircle,
+  Star,
+  Award,
+  TrendingUp
+} from 'lucide-react';
 
-// ------------------------------------------------------------
-// Types
-// ------------------------------------------------------------
+const Services = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
-type ServiceDetail = {
-  timeframe: string;
-  benefits: string[];
-  process: string[];
-};
-
-type Service = {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  description: string;
-  category: "Corporate & Business Setup" | "Tax & Financial Services" | "Legal Services" | "Cross-Border & Specialized";
-  color:
-    | "blue"
-    | "green"
-    | "purple"
-    | "orange"
-    | "red"
-    | "cyan"
-    | "yellow"
-    | "indigo"
-    | "teal"
-    | "rose"
-    | "amber"
-    | "emerald"
-    | "violet";
-  timeframe: string;
-  docsRequired: string[];
-  details: ServiceDetail;
-  theme?: "uk" | "usa"; // extra visual treatment
-};
-
-// ------------------------------------------------------------
-// Data (feel free to add/remove items; structure stays the same)
-// ------------------------------------------------------------
-
-const servicesData: Service[] = [
-  {
-    icon: Building2,
-    title: "Company Registration (SECP Pvt Ltd / SMC)",
-    description: "Complete private limited company registration with SECP",
-    category: "Corporate & Business Setup",
-    color: "blue",
-    timeframe: "5–7 working days",
-    docsRequired: [
-      "CNICs of directors",
-      "3 name options",
-      "Email & phone",
-      "Address proof",
-      "Incorporation docs (Memorandum & Articles)",
-    ],
-    details: {
-      timeframe: "5–7 working days",
-      benefits: [
-        "Complete SECP registration process",
-        "Legal compliance assurance",
-        "Corporate structure optimization",
-        "Ongoing compliance support",
-        "Business advisory services",
-      ],
-      process: [
-        "Name reservation and approval",
-        "Documentation preparation",
-        "SECP filing and registration",
-        "Certificate issuance",
-        "Post-incorporation compliance",
-      ],
+  const services = [
+    // Corporate & Business Setup
+    {
+      icon: FileText,
+      title: 'Tax Registration Services',
+      description: 'Complete tax registration and compliance solutions',
+      category: 'Corporate & Business Setup',
+      timeframe: '1-2 working days',
+      features: ['Fast processing', 'Complete documentation', 'FBR compliance', 'Certificate delivery'],
+      color: 'blue'
     },
-  },
-  {
-    icon: Users,
-    title: "Sole Proprietorship Setup",
-    description: "Individual business registration and setup",
-    category: "Corporate & Business Setup",
-    color: "green",
-    timeframe: "2–3 working days",
-    docsRequired: ["CNIC", "Business name", "Electricity bill", "Mobile number", "Email"],
-    details: {
-      timeframe: "2–3 working days",
-      benefits: [
-        "Simple business structure",
-        "Minimal compliance requirements",
-        "Direct tax benefits",
-        "Easy setup process",
-        "Cost-effective solution",
-      ],
-      process: [
-        "Business name registration",
-        "Tax registration",
-        "License applications",
-        "Bank account setup",
-        "Compliance guidance",
-      ],
+    {
+      icon: Building2,
+      title: 'Company Registration (SECP)',
+      description: 'Private Limited and SMC company formation services',
+      category: 'Corporate & Business Setup',
+      timeframe: '5-7 working days',
+      features: ['SECP registration', 'Legal compliance', 'Corporate structure', 'Ongoing support'],
+      color: 'indigo'
     },
-  },
-  {
-    icon: FileText,
-    title: "NTN / Tax Registration",
-    description: "National Tax Number registration for individuals and businesses",
-    category: "Tax & Financial Services",
-    color: "cyan",
-    timeframe: "1–2 working days",
-    docsRequired: ["CNIC", "Business proof", "Electricity bill", "Letterhead & stamp"],
-    details: {
-      timeframe: "1–2 working days",
-      benefits: [
-        "Fast NTN registration process",
-        "Complete documentation handling",
-        "FBR compliance assurance",
-        "Certificate delivery",
-        "Ongoing support",
-      ],
-      process: [
-        "Document verification",
-        "Application preparation",
-        "FBR submission",
-        "Follow-up and tracking",
-        "NTN certificate delivery",
-      ],
+    {
+      icon: Users,
+      title: 'Sole Proprietorship Setup',
+      description: 'Quick and easy sole proprietorship business setup',
+      category: 'Corporate & Business Setup',
+      timeframe: '2-3 working days',
+      features: ['Simple structure', 'Minimal compliance', 'Tax benefits', 'Cost-effective'],
+      color: 'green'
     },
-  },
-  {
-    icon: Calculator,
-    title: "Tax Preparation & Filing",
-    description: "Professional tax return preparation and filing services",
-    category: "Tax & Financial Services",
-    color: "blue",
-    timeframe: "1–3 working days",
-    docsRequired: ["CNIC", "Salary certificate", "Bank statements", "Property docs", "Business receipts"],
-    details: {
-      timeframe: "1–3 working days",
-      benefits: [
-        "Expert tax preparation by certified professionals",
-        "Maximum deductions and tax savings",
-        "Error-free filing with accuracy guarantee",
-        "Audit support and representation",
-        "Year-round tax planning advice",
-      ],
-      process: [
-        "Document collection and review",
-        "Tax calculation and optimization",
-        "Return preparation and review",
-        "Electronic filing with FBR",
-        "Confirmation and record keeping",
-      ],
+    {
+      icon: FileText,
+      title: 'Partnership Firm Registration',
+      description: 'Complete partnership firm setup and registration',
+      category: 'Corporate & Business Setup',
+      timeframe: '3-5 working days',
+      features: ['Partnership deed', 'Registration process', 'Tax planning', 'Legal documentation'],
+      color: 'purple'
     },
-  },
-  {
-    icon: Scale,
-    title: "Civil Law Services",
-    description: "Comprehensive civil law services and representation",
-    category: "Legal Services",
-    color: "purple",
-    timeframe: "15–60 days (case dependent)",
-    docsRequired: ["CNIC", "Property/contracts (if relevant)", "Case details"],
-    details: {
-      timeframe: "15–60 days (case dependent)",
-      benefits: [
-        "Expert legal representation",
-        "Civil litigation support",
-        "Contract disputes",
-        "Property matters",
-        "Legal documentation",
-      ],
-      process: [
-        "Case evaluation",
-        "Legal strategy development",
-        "Documentation preparation",
-        "Court representation",
-        "Case resolution",
-      ],
+    {
+      icon: TrendingUp,
+      title: 'Sales Tax Registration',
+      description: 'FBR & PRA sales tax registration services',
+      category: 'Corporate & Business Setup',
+      timeframe: '3-5 working days',
+      features: ['FBR registration', 'PRA compliance', 'Monthly filing', 'Expert guidance'],
+      color: 'orange'
     },
-  },
-  {
-    icon: Shield,
-    title: "Intellectual Property Law",
-    description: "Trademark, patent, and copyright registration services",
-    category: "Legal Services",
-    color: "indigo",
-    timeframe: "3–6 months (IPO Pakistan)",
-    docsRequired: ["CNIC", "Logo/design", "Business proof", "Power of attorney"],
-    details: {
-      timeframe: "3–6 months (IPO Pakistan)",
-      benefits: [
-        "Complete IP protection strategy",
-        "Trademark search and registration",
-        "Copyright and patent filing",
-        "IP portfolio management",
-        "Infringement protection",
-      ],
-      process: [
-        "IP search and analysis",
-        "Application preparation",
-        "Filing with IPO Pakistan",
-        "Examination and response",
-        "Registration and maintenance",
-      ],
+
+    // Tax & Financial Services
+    {
+      icon: Calculator,
+      title: 'Tax Advisory & Filing',
+      description: 'Expert tax consultation and professional filing services',
+      category: 'Tax & Financial Services',
+      timeframe: '1-3 working days',
+      features: ['Expert consultation', 'Professional filing', 'Tax optimization', 'Audit support'],
+      color: 'blue'
     },
-  },
-  {
-    icon: Globe,
-    title: "International Business Structuring (UK Theme)",
-    description: "International business structure planning and setup in the UK",
-    category: "Cross-Border & Specialized",
-    color: "teal",
-    timeframe: "15–30 working days",
-    docsRequired: ["Ownership details", "Country of operation", "Financials"],
-    details: {
-      timeframe: "15–30 working days",
-      benefits: [
-        "International structure planning",
-        "Tax optimization strategies",
-        "Multi-jurisdiction compliance",
-        "Cross-border transactions",
-        "Regulatory guidance",
-      ],
-      process: [
-        "Structure analysis",
-        "Jurisdiction selection",
-        "Documentation preparation",
-        "Registration processes",
-        "Ongoing compliance",
-      ],
+    {
+      icon: FileText,
+      title: 'Bookkeeping Services',
+      description: 'Professional bookkeeping and accounting services',
+      category: 'Tax & Financial Services',
+      timeframe: 'Monthly basis',
+      features: ['Monthly books', 'Financial reports', 'Tax preparation', 'Compliance tracking'],
+      color: 'cyan'
     },
-    theme: "uk",
-  },
-  {
-    icon: Briefcase,
-    title: "US Business Consulting (USA Theme)",
-    description: "Business consulting and tax planning services for USA operations",
-    category: "Cross-Border & Specialized",
-    color: "amber",
-    timeframe: "10–20 working days",
-    docsRequired: ["Business proof", "Tax history", "Ownership details"],
-    details: {
-      timeframe: "10–20 working days",
-      benefits: [
-        "Tax-efficient strategies for US",
-        "Business setup and planning",
-        "Cross-border compliance",
-        "IRS compliance guidance",
-        "Advisory and support",
-      ],
-      process: [
-        "Requirement analysis",
-        "Tax planning",
-        "Documentation",
-        "Registration support",
-        "Ongoing compliance",
-      ],
+    {
+      icon: Award,
+      title: 'Statutory Audit',
+      description: 'Professional statutory audit and compliance services',
+      category: 'Tax & Financial Services',
+      timeframe: '15-30 days',
+      features: ['Comprehensive audit', 'Compliance review', 'Risk assessment', 'Audit reports'],
+      color: 'red'
     },
-    theme: "usa",
-  },
-];
 
-// ------------------------------------------------------------
-// Helpers
-// ------------------------------------------------------------
+    // Legal Services
+    {
+      icon: Scale,
+      title: 'Legal Services',
+      description: 'Civil law, family law and comprehensive legal services',
+      category: 'Legal Services',
+      timeframe: 'Case dependent',
+      features: ['Civil litigation', 'Family law', 'Contract disputes', 'Legal representation'],
+      color: 'purple'
+    },
+    {
+      icon: Shield,
+      title: 'Intellectual Property',
+      description: 'Trademark, patent, and copyright registration services',
+      category: 'Legal Services',
+      timeframe: '3-6 months',
+      features: ['Trademark registration', 'Patent filing', 'Copyright protection', 'IP portfolio'],
+      color: 'indigo'
+    },
 
-const colorPill: Record<Service["color"], string> = {
-  blue: "bg-blue-50 text-blue-700 border-blue-200",
-  green: "bg-green-50 text-green-700 border-green-200",
-  purple: "bg-purple-50 text-purple-700 border-purple-200",
-  orange: "bg-orange-50 text-orange-700 border-orange-200",
-  red: "bg-red-50 text-red-700 border-red-200",
-  cyan: "bg-cyan-50 text-cyan-700 border-cyan-200",
-  yellow: "bg-yellow-50 text-yellow-700 border-yellow-200",
-  indigo: "bg-indigo-50 text-indigo-700 border-indigo-200",
-  teal: "bg-teal-50 text-teal-700 border-teal-200",
-  rose: "bg-rose-50 text-rose-700 border-rose-200",
-  amber: "bg-amber-50 text-amber-700 border-amber-200",
-  emerald: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  violet: "bg-violet-50 text-violet-700 border-violet-200",
-};
-
-const categories: Service["category"][] = [
-  "Corporate & Business Setup",
-  "Tax & Financial Services",
-  "Legal Services",
-  "Cross-Border & Specialized",
-];
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.06, duration: 0.5, ease: "easeOut" },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
-};
-
-// ------------------------------------------------------------
-// Component
-// ------------------------------------------------------------
-
-const Services: React.FC = () => {
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null); // list-style expander
-  const [search, setSearch] = useState("");
-  const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 500], [0, 100]);
-
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return servicesData;
-    return servicesData.filter(
-      (s) =>
-        s.title.toLowerCase().includes(q) ||
-        s.description.toLowerCase().includes(q) ||
-        s.category.toLowerCase().includes(q)
-    );
-  }, [search]);
-
-  const grouped = useMemo(() => {
-    const map = new Map<Service["category"], Service[]>();
-    for (const cat of categories) map.set(cat, []);
-    for (const s of filtered) {
-      const arr = map.get(s.category)!;
-      arr.push(s);
+    // International Services
+    {
+      icon: Globe,
+      title: 'UK Ltd Company Formation',
+      description: 'International UK company formation services',
+      category: 'UK Services',
+      timeframe: '7-10 working days',
+      features: ['UK incorporation', 'Bank account setup', 'Registered address', 'Compliance support'],
+      color: 'red',
+      theme: 'uk'
+    },
+    {
+      icon: Briefcase,
+      title: 'USA LLC Formation',
+      description: 'US business formation and LLC setup services',
+      category: 'USA Services',
+      timeframe: '10-15 working days',
+      features: ['LLC formation', 'EIN registration', 'Bank account', 'Tax planning'],
+      color: 'blue',
+      theme: 'usa'
+    },
+    {
+      icon: TrendingUp,
+      title: 'Business Process Consulting',
+      description: 'Strategic business consulting and advisory services',
+      category: 'Consulting Services',
+      timeframe: '10-20 working days',
+      features: ['Strategic planning', 'Process optimization', 'Growth strategies', 'Market analysis'],
+      color: 'emerald'
     }
-    return map;
-  }, [filtered]);
+  ];
 
-  const themeClass = (theme?: Service["theme"]) => {
-    if (theme === "uk")
-      return "relative border-l-4 border-red-600 bg-gradient-to-r from-red-50 via-white to-white";
-    if (theme === "usa")
-      return "relative border-l-4 border-blue-700 bg-gradient-to-r from-blue-50 via-white to-white";
-    return "";
+  const categories = ['All', 'Corporate & Business Setup', 'Tax & Financial Services', 'Legal Services', 'UK Services', 'USA Services', 'Consulting Services'];
+
+  const filteredServices = useMemo(() => {
+    return services.filter(service => {
+      const matchesSearch = service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           service.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           service.category.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === 'All' || service.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchTerm, selectedCategory]);
+
+  const getColorClasses = (color: string) => {
+    const colors = {
+      blue: 'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
+      indigo: 'from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700',
+      green: 'from-green-500 to-green-600 hover:from-green-600 hover:to-green-700',
+      purple: 'from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
+      orange: 'from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700',
+      cyan: 'from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700',
+      red: 'from-red-500 to-red-600 hover:from-red-600 hover:to-red-700',
+      emerald: 'from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700'
+    };
+    return colors[color] || colors.blue;
+  };
+
+  const getThemeBackground = (theme?: string) => {
+    if (theme === 'uk') {
+      return 'bg-gradient-to-br from-red-50 via-white to-blue-50';
+    }
+    if (theme === 'usa') {
+      return 'bg-gradient-to-br from-blue-50 via-white to-red-50';
+    }
+    return 'bg-white';
+  };
+
+  const getThemeBorder = (theme?: string) => {
+    if (theme === 'uk') {
+      return 'border-l-4 border-red-600';
+    }
+    if (theme === 'usa') {
+      return 'border-l-4 border-blue-700';
+    }
+    return 'border-l-4 border-gray-200';
   };
 
   return (
-    <div className="relative">
-      {/* -------------------------------------- */}
-      {/* Hero: Pakistan Supreme/High Court blend */}
-      {/* -------------------------------------- */}
-      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
-        <motion.div style={{ y: heroY }} className="absolute inset-0 z-0">
-          <div className="absolute inset-0">
-            <img
-              src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f"
-              alt="Supreme Court of Pakistan"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-slate-900/70" />
-          </div>
-          <div className="absolute inset-0 opacity-40 mix-blend-overlay">
-            <img
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d"
-              alt="High Court of Pakistan"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </motion.div>
+    <div>
+      {/* WhatsApp Float Button */}
+      <motion.div
+        className="fixed bottom-6 right-6 z-50"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 2, type: "spring" }}
+      >
+        <a
+          href="https://wa.me/923077026707"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-2"
+        >
+          <MessageCircle className="h-6 w-6" />
+          <span className="hidden md:block font-medium">WhatsApp</span>
+        </a>
+      </motion.div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 py-20 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-5xl md:text-6xl font-bold text-white tracking-tight"
-          >
-            Our Professional Services
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-4 text-white/80 max-w-2xl mx-auto"
-          >
-            Legal, tax and corporate solutions—delivered with precision.
-          </motion.p>
-
-          {/* Search */}
-          <div className="mt-10 flex items-center justify-center">
-            <div className="relative w-full max-w-2xl">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white/70" />
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search services, e.g. ‘NTN’, ‘UK’, ‘SECP’"
-                className="w-full rounded-2xl bg-white/10 border border-white/20 backdrop-blur px-12 py-4 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/40"
-              />
-            </div>
-          </div>
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-white overflow-hidden pt-0">
+        {/* Professional Building Background */}
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.pexels.com/photos/5668473/pexels-photo-5668473.jpeg?auto=compress&cs=tinysrgb&w=1920" 
+            alt="Professional Building" 
+            className="w-full h-full object-cover opacity-15"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/85 via-blue-800/85 to-blue-700/85"></div>
         </div>
-      </section>
-
-      {/* -------------------------------------- */}
-      {/* Services - clean LIST style by category */}
-      {/* -------------------------------------- */}
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          {[...grouped.keys()].map((category) => {
-            const items = grouped.get(category)!;
-            if (!items.length) return null;
-            return (
-              <motion.div
-                key={category}
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                className="mb-14"
-              >
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-5 border-b-4 border-blue-600 inline-block pb-2">
-                  {category}
-                </h2>
-
-                <ul className="rounded-2xl border border-gray-200 divide-y divide-gray-200 shadow-sm overflow-hidden">
-                  {items.map((svc, idx) => {
-                    const isOpen = expandedIndex === servicesData.indexOf(svc);
-                    return (
-                      <motion.li
-                        key={`${svc.title}-${idx}`}
-                        variants={itemVariants}
-                        className={`${themeClass(svc.theme)} group`}
-                      >
-                        {/* Row */}
-                        <button
-                          onClick={() =>
-                            setExpandedIndex((cur) =>
-                              cur === servicesData.indexOf(svc) ? null : servicesData.indexOf(svc)
-                            )
-                          }
-                          className="w-full flex items-start gap-4 p-5 text-left hover:bg-gray-50/60 transition"
-                          aria-expanded={isOpen}
-                        >
-                          <span className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700 group-hover:shadow">
-                            <svc.icon className="h-6 w-6" />
-                          </span>
-                          <div className="flex-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <h3 className="text-lg font-semibold text-gray-900">{svc.title}</h3>
-                              <span className={`text-xs px-2.5 py-1 rounded-full border ${colorPill[svc.color]}`}>
-                                {svc.category}
-                              </span>
-                              {svc.theme === "uk" && (
-                                <span className="text-xs px-2.5 py-1 rounded-full border border-red-200 bg-red-50 text-red-700">UK</span>
-                              )}
-                              {svc.theme === "usa" && (
-                                <span className="text-xs px-2.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700">USA</span>
-                              )}
-                            </div>
-                            <p className="mt-1 text-gray-600">{svc.description}</p>
-                          </div>
-                          <span className="ml-4 shrink-0 text-sm text-gray-500">{svc.timeframe}</span>
-                        </button>
-
-                        {/* Expandable detail */}
-                        <AnimatePresence initial={false}>
-                          {isOpen && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              className="px-5 pb-6"
-                            >
-                              <div className="grid gap-6 md:grid-cols-3">
-                                {/* Timeline */}
-                                <div className="rounded-2xl border p-4 bg-blue-50/50 border-blue-200">
-                                  <div className="flex items-center gap-2 mb-2 text-blue-900 font-semibold">
-                                    <Clock className="h-5 w-5" />
-                                    Timeline
-                                  </div>
-                                  <p className="text-blue-800">{svc.details.timeframe}</p>
-                                </div>
-
-                                {/* Docs */}
-                                <div className="rounded-2xl border p-4 bg-emerald-50/50 border-emerald-200">
-                                  <div className="flex items-center gap-2 mb-2 text-emerald-900 font-semibold">
-                                    <FileCheck2 className="h-5 w-5" />
-                                    Documents Required
-                                  </div>
-                                  <ul className="list-disc pl-5 space-y-1 text-emerald-900">
-                                    {svc.docsRequired.map((d, i) => (
-                                      <li key={i}>{d}</li>
-                                    ))}
-                                  </ul>
-                                </div>
-
-                                {/* Benefits */}
-                                <div className="rounded-2xl border p-4 bg-indigo-50/50 border-indigo-200">
-                                  <div className="flex items-center gap-2 mb-2 text-indigo-900 font-semibold">
-                                    <CheckCircle2 className="h-5 w-5" />
-                                    Key Benefits
-                                  </div>
-                                  <ul className="space-y-1 text-indigo-900">
-                                    {svc.details.benefits.map((b, i) => (
-                                      <li key={i} className="flex gap-2">
-                                        <span>•</span>
-                                        <span>{b}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              </div>
-
-                              {/* Process */}
-                              <div className="mt-6 rounded-2xl border p-4">
-                                <p className="font-semibold text-gray-800 mb-2">Process</p>
-                                <ol className="list-decimal pl-5 space-y-1 text-gray-700">
-                                  {svc.details.process.map((p, i) => (
-                                    <li key={i}>{p}</li>
-                                  ))}
-                                </ol>
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </motion.li>
-                    );
-                  })}
-                </ul>
-              </motion.div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* -------------------------------------- */}
-      {/* Subtle legal watermark strip (optional aesthetic) */}
-      {/* -------------------------------------- */}
-      <div className="pointer-events-none select-none absolute inset-x-0 bottom-0 translate-y-1/2">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-gradient-to-r from-slate-50 via-white to-slate-50 p-6 shadow-sm">
-            <p className="text-center text-sm text-slate-500">
-              * Imagery inspired by the Supreme Court of Pakistan and High Court to reflect our legal ethos.
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center relative z-10"
+          >
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight">
+              Our Professional Services
+            </h1>
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-8">
+              Comprehensive tax and legal solutions delivered with precision and expertise
             </p>
+
+            {/* Search Bar */}
+            <div className="max-w-2xl mx-auto">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-300 h-5 w-5" />
+                <input
+                  type="text"
+                  placeholder="Search services..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/30 transition-all duration-300"
+                />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Category Filter */}
+      <section className="py-8 bg-gray-50 border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap justify-center gap-3">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                  selectedCategory === category
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'bg-white text-gray-600 hover:bg-blue-50 hover:text-blue-600 shadow-sm'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Services Grid */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {filteredServices.length === 0 ? (
+            <div className="text-center py-16">
+              <Search className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">No services found</h3>
+              <p className="text-gray-500">Try adjusting your search or filter criteria</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredServices.map((service, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{ y: -5, scale: 1.02 }}
+                  className={`${getThemeBackground(service.theme)} ${getThemeBorder(service.theme)} rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden`}
+                >
+                  {/* UK Flag Background */}
+                  {service.theme === 'uk' && (
+                    <div className="absolute top-0 right-0 w-20 h-12 opacity-20">
+                      <div className="w-full h-full bg-gradient-to-br from-red-600 via-white to-blue-600"></div>
+                    </div>
+                  )}
+                  
+                  {/* USA Flag Background */}
+                  {service.theme === 'usa' && (
+                    <div className="absolute top-0 right-0 w-20 h-12 opacity-20">
+                      <div className="w-full h-full bg-gradient-to-br from-blue-700 via-white to-red-600"></div>
+                    </div>
+                  )}
+
+                  <div className="p-8 relative">
+                    {/* Icon */}
+                    <div className={`bg-gradient-to-br ${getColorClasses(service.color)} w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-lg`}>
+                      <service.icon className="h-8 w-8 text-white" />
+                    </div>
+
+                    {/* Category Badge */}
+                    <div className="mb-4">
+                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                        service.theme === 'uk' ? 'bg-red-100 text-red-800' :
+                        service.theme === 'usa' ? 'bg-blue-100 text-blue-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {service.category}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">{service.title}</h3>
+                    
+                    {/* Description */}
+                    <p className="text-gray-600 mb-4 leading-relaxed">{service.description}</p>
+
+                    {/* Timeframe */}
+                    <div className="flex items-center text-sm text-blue-600 mb-4">
+                      <Clock className="h-4 w-4 mr-2" />
+                      <span>{service.timeframe}</span>
+                    </div>
+
+                    {/* Features */}
+                    <div className="mb-6">
+                      <ul className="space-y-2">
+                        {service.features.slice(0, 3).map((feature, idx) => (
+                          <li key={idx} className="flex items-center text-sm text-gray-600">
+                            <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* CTA Button */}
+                    <div className="flex space-x-3">
+                      <a
+                        href="/contact"
+                        className={`flex-1 inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r ${getColorClasses(service.color)} text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg`}
+                      >
+                        Get Started
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </a>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-blue-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Ready to Get Started?
+            </h2>
+            <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+              Contact our expert team for personalized consultation and professional service delivery
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.a
+                href="/contact"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+              >
+                Get Free Consultation
+              </motion.a>
+              <a
+                href="https://wa.me/923077026707"
+                className="inline-flex items-center justify-center bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors"
+              >
+                <MessageCircle className="mr-2 h-5 w-5" />
+                WhatsApp Us
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
     </div>
   );
 };
