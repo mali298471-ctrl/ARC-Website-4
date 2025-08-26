@@ -278,21 +278,58 @@ const Home = () => {
             </button>
 
             {/* Services Display */}
-            <div className="flex justify-center items-center space-x-8 px-16">
-              {getDisplayServices().map((service, index) => {
-                const isCenter = service.position === 'current';
-                return (
-                  <div
-                    key={`${service.title}-${index}`}
-                    className={`transition-all duration-500 ${
-                      isCenter 
-                        ? 'w-96 transform scale-110 z-10' 
-                        : 'w-80 transform scale-90 opacity-70'
-                    }`}
-                  >
-                    <div className={`bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 relative ${
-                      isCenter ? 'border-4 border-blue-500 shadow-2xl' : 'border border-gray-200'
-                    }`}>
+<div className="flex justify-center items-center space-x-8 px-16">
+  {getDisplayServices().map((service, index) => {
+    const isCenter = service.position === 'current';
+    return (
+      <div
+        key={`${service.title}-${index}`}
+        className={`transition-all duration-500 ${
+          isCenter 
+            ? 'w-96 transform scale-110 z-10' 
+            : 'w-80 transform scale-90 opacity-70'
+        }`}
+      >
+        <div 
+          className={`bg-white p-8 rounded-2xl shadow-lg relative border transition-all duration-300 transform hover:scale-105 hover:shadow-2xl`}
+          style={{
+            borderColor: isCenter ? '#2563eb' : '#e5e7eb' // Blue border for active card
+          }}
+        >
+          {/* 🔹 Removed "Most Popular" badge */}
+
+          <div className="bg-gradient-to-br from-blue-100 to-blue-50 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+            <service.icon className="h-8 w-8 text-blue-600" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-900 mb-3">{service.title}</h3>
+          <p className="text-gray-600 mb-4 text-sm leading-relaxed">{service.description}</p>
+          {service.time && (
+            <div className="flex items-center text-xs text-blue-600 mb-4">
+              <Clock className="h-4 w-4 mr-1" />
+              <span>{service.time}</span>
+            </div>
+          )}
+          <div className="flex space-x-2">
+            <a
+              href="/contact"
+              className="flex-1 inline-flex items-center justify-center text-blue-600 hover:text-blue-700 font-semibold transition-colors border border-blue-200 hover:border-blue-300 rounded-lg py-2 px-3 text-sm"
+            >
+              Get Started
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </a>
+            <a
+              href="tel:+923362280987"
+              className="inline-flex items-center justify-center px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors"
+            >
+              <Phone className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  })}
+</div>
+
                       {/* Most Popular Badge */}
                       {isCenter && (
                         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
