@@ -130,7 +130,7 @@ const About = () => {
               <h2 className="text-4xl font-bold text-gray-900 mb-6">Professional Excellence Since 2017</h2>
               <p className="text-lg text-gray-700 mb-6 leading-relaxed">
                 Established in 2017, AR Raheem Consulting Pvt Ltd has emerged as Pakistan's most trusted comprehensive 
-                legal and financial solutions provider. Our practice spans all areas of tax law, business law, corporate advisory, 
+                tax and legal solutions provider. Our practice spans all areas of tax law, business law, corporate advisory, 
                 legal consultation, and strategic planning across domestic and international markets.
               </p>
               <p className="text-lg text-gray-700 mb-6 leading-relaxed">

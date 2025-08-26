@@ -70,19 +70,42 @@ const Home = () => {
 
   // All services from the document
   const allServices = [
-    { icon: FileText, title: 'Tax Registration Services', description: 'Complete NTN registration and tax compliance solutions', time: '1-2 working days' },
+    { icon: FileText, title: 'Tax Registration Services', description: 'Complete tax registration and compliance solutions', time: '1-2 working days' },
     { icon: Calculator, title: 'Tax Advisory & Filing', description: 'Expert tax consultation and professional filing services', time: '1-3 working days' },
     { icon: Building, title: 'Company Registration', description: 'SECP Pvt Ltd & SMC company formation services', time: '5-7 working days' },
     { icon: Users, title: 'Sole Proprietorship Setup', description: 'Quick and easy sole proprietorship business setup', time: '2-3 working days' },
-    { icon: TrendingUp, title: 'Sales Tax Registration', description: 'FBR & PRA sales tax registration services', time: '3-5 working days' },
+    { icon: TrendingUp, title: 'Sales Tax Registration', description: 'Tax registration services for businesses', time: '3-5 working days' },
     { icon: FileText, title: 'Partnership Firm Registration', description: 'Complete partnership firm setup and registration', time: '3-5 working days' },
     { icon: Calculator, title: 'Bookkeeping Services', description: 'Professional bookkeeping and accounting services', time: 'Monthly basis' },
     { icon: Award, title: 'UK Ltd Company Formation', description: 'International UK company formation services', time: '7-10 working days' },
     { icon: Star, title: 'USA LLC Formation', description: 'US business formation and LLC setup', time: '10-15 working days' },
-    { icon: Building, title: 'Legal Services', description: 'Civil law, family law and IP legal services', time: 'Case dependent' },
+    { icon: Building, title: 'Legal Services', description: 'Civil law, family law and legal services', time: 'Case dependent' },
     { icon: FileText, title: 'Statutory Audit', description: 'Professional statutory audit and compliance', time: '15-30 days' },
     { icon: TrendingUp, title: 'Business Process Consulting', description: 'Strategic business consulting and advisory', time: '10-20 working days' }
   ];
+
+  // State for manual carousel control
+  const [currentServiceIndex, setCurrentServiceIndex] = useState(0);
+
+  // Get 3 services for display (previous, current, next)
+  const getDisplayServices = () => {
+    const prevIndex = currentServiceIndex === 0 ? allServices.length - 1 : currentServiceIndex - 1;
+    const nextIndex = currentServiceIndex === allServices.length - 1 ? 0 : currentServiceIndex + 1;
+    
+    return [
+      { ...allServices[prevIndex], position: 'prev' },
+      { ...allServices[currentServiceIndex], position: 'current' },
+      { ...allServices[nextIndex], position: 'next' }
+    ];
+  };
+
+  const nextService = () => {
+    setCurrentServiceIndex((prev) => (prev + 1) % allServices.length);
+  };
+
+  const prevService = () => {
+    setCurrentServiceIndex((prev) => (prev - 1 + allServices.length) % allServices.length);
+  };
 
   // Simple animation styles using CSS transforms
   const scrollAnimation = {
@@ -121,25 +144,6 @@ const Home = () => {
         .service-carousel:hover {
           animation-play-state: paused;
         }
-        .service-card {
-          transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-          transform: scale(0.85);
-          opacity: 0.6;
-          filter: grayscale(0.3) brightness(0.9);
-          border: 2px solid transparent;
-        }
-        .service-card.center {
-          transform: scale(1.1);
-          opacity: 1;
-          filter: grayscale(0) brightness(1.1);
-          border: 3px solid #3b82f6;
-          box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
-        }
-        .service-card.side {
-          transform: scale(0.95);
-          opacity: 0.8;
-          filter: grayscale(0.1) brightness(0.95);
-        }
       `}</style>
 
       {/* WhatsApp Float Button */}
@@ -170,12 +174,12 @@ const Home = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight">
-              Smart Tax Solutions
+              Professional Tax & Legal Solutions
               <span className="text-blue-300"> Made Simple</span>
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl text-blue-100 mb-6 sm:mb-8 max-w-3xl mx-auto px-4">
-              Leading tax consultation and business advisory firm in Pakistan with 8+ years of excellence. 
-              We provide comprehensive tax solutions, legal services, and business advisory to help you achieve compliance and growth.
+              Leading tax and legal consultation firm in Pakistan with 8+ years of excellence. 
+              We provide comprehensive tax and legal solutions to help you achieve compliance and growth.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
@@ -254,68 +258,100 @@ const Home = () => {
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-700 mx-auto mb-6"></div>
             <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
-              Our most popular and essential tax services tailored for your success
+              Our most popular and essential services tailored for your success
             </p>
           </div>
 
-          <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-blue-50 rounded-3xl p-8 shadow-inner">
-            <div className="flex justify-center">
-              <div className="relative w-full max-w-5xl overflow-hidden">
-                <div className="service-carousel flex space-x-8">
-                  {/* Triple the services for seamless loop */}
-                  {[...allServices, ...allServices, ...allServices].map((service, index) => {
-                    // Calculate position for center effect
-                    const position = index % 3;
-                    let cardClass = 'service-card';
-                    if (position === 1) cardClass += ' center';
-                    else if (position === 0 || position === 2) cardClass += ' side';
+          <div className="relative">
+            {/* Navigation Arrows */}
+            <button
+              onClick={prevService}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 hover:bg-white text-gray-700 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <ArrowRight className="h-6 w-6 rotate-180" />
+            </button>
+            <button
+              onClick={nextService}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 hover:bg-white text-gray-700 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <ArrowRight className="h-6 w-6" />
+            </button>
 
-                    return (
-                      <div
-                        key={index}
-                        className={`${cardClass} flex-shrink-0 w-80 bg-white p-8 rounded-2xl shadow-lg relative`}
-                      >
-                        <div className="bg-gradient-to-br from-blue-100 to-blue-50 w-16 h-16 rounded-xl flex items-center justify-center mb-6 relative overflow-hidden">
-                          <service.icon className="h-8 w-8 text-blue-600 z-10" />
-                          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+            {/* Services Display */}
+            <div className="flex justify-center items-center space-x-8 px-16">
+              {getDisplayServices().map((service, index) => {
+                const isCenter = service.position === 'current';
+                return (
+                  <div
+                    key={`${service.title}-${index}`}
+                    className={`transition-all duration-500 ${
+                      isCenter 
+                        ? 'w-96 transform scale-110 z-10' 
+                        : 'w-80 transform scale-90 opacity-70'
+                    }`}
+                  >
+                    <div className={`bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 relative ${
+                      isCenter ? 'border-4 border-blue-500 shadow-2xl' : 'border border-gray-200'
+                    }`}>
+                      {/* Most Popular Badge */}
+                      {isCenter && (
+                        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                          <span className="bg-gradient-to-r from-orange-400 to-orange-600 text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg">
+                            Most Popular
+                          </span>
                         </div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">{service.title}</h3>
-                        <p className="text-gray-600 mb-4 text-sm leading-relaxed line-clamp-3">{service.description}</p>
-                        {service.time && (
-                          <div className="flex items-center text-xs text-blue-600 mb-4">
-                            <Clock className="h-4 w-4 mr-1" />
-                            <span>{service.time}</span>
-                          </div>
-                        )}
-                        <div className="flex space-x-2">
-                          <a
-                            href="#contact"
-                            className="flex-1 inline-flex items-center justify-center text-blue-600 hover:text-blue-700 font-semibold transition-colors border border-blue-200 hover:border-blue-300 rounded-lg py-2 px-3 text-sm"
-                          >
-                            Get Started
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </a>
-                          <a
-                            href="tel:+923362280987"
-                            className="inline-flex items-center justify-center px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors"
-                          >
-                            <Phone className="h-4 w-4" />
-                          </a>
-                        </div>
+                      )}
+
+                      <div className="bg-gradient-to-br from-blue-100 to-blue-50 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                        <service.icon className="h-8 w-8 text-blue-600" />
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-3">{service.title}</h3>
+                      <p className="text-gray-600 mb-4 text-sm leading-relaxed">{service.description}</p>
+                      {service.time && (
+                        <div className="flex items-center text-xs text-blue-600 mb-4">
+                          <Clock className="h-4 w-4 mr-1" />
+                          <span>{service.time}</span>
+                        </div>
+                      )}
+                      <div className="flex space-x-2">
+                        <a
+                          href="/contact"
+                          className="flex-1 inline-flex items-center justify-center text-blue-600 hover:text-blue-700 font-semibold transition-colors border border-blue-200 hover:border-blue-300 rounded-lg py-2 px-3 text-sm"
+                        >
+                          Get Started
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </a>
+                        <a
+                          href="tel:+923362280987"
+                          className="inline-flex items-center justify-center px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors"
+                        >
+                          <Phone className="h-4 w-4" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            
-            {/* Fade edges for better visual effect */}
-            <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none"></div>
-            <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-blue-50 to-transparent z-10 pointer-events-none"></div>
+
+            {/* Dots Indicator */}
+            <div className="flex justify-center mt-8 space-x-2">
+              {allServices.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentServiceIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentServiceIndex 
+                      ? 'bg-blue-600 scale-125' 
+                      : 'bg-gray-300 hover:bg-gray-400'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
           
           <div className="text-center mt-12">
-            <p className="text-gray-600 mb-6">Showing {allServices.length} professional services • Hover to pause animation</p>
+            <p className="text-gray-600 mb-6">Showing {allServices.length} professional services • Click arrows to navigate</p>
             <a href="/services" className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-blue-600 text-white hover:bg-blue-700 font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">
               View All Services
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -377,7 +413,7 @@ const Home = () => {
               Ready to Get Your Tax Matters Sorted?
             </h2>
             <p className="text-lg sm:text-xl text-blue-100 mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
-              Get expert tax consultation, NTN registration, and business formation services. Let us handle your compliance needs professionally.
+              Get expert tax consultation and legal services. Let us handle your compliance needs professionally.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
