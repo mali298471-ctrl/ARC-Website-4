@@ -491,7 +491,7 @@ const Services = () => {
 
       {/* Services Vertical List */}
       <section className="py-12 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {filteredServices.length === 0 ? (
             <div className="text-center py-16">
               <Search className="h-16 w-16 text-gray-300 mx-auto mb-4" />
@@ -499,7 +499,7 @@ const Services = () => {
               <p className="text-gray-500">Try adjusting your search or filter criteria</p>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-8">
               {filteredServices.map((service, index) => (
                 <motion.div
                   key={index}
@@ -523,18 +523,18 @@ const Services = () => {
                     </div>
                   )}
 
-                  <div className="p-6 relative">
-                    <div className="flex items-start space-x-6">
+                  <div className="p-8 relative">
+                    <div className="flex items-start space-x-8">
                       {/* Icon */}
-                      <div className={`bg-gradient-to-br ${getColorClasses(service.color)} w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg`}>
-                        <service.icon className="h-8 w-8 text-white" />
+                      <div className={`bg-gradient-to-br ${getColorClasses(service.color)} w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg`}>
+                        <service.icon className="h-10 w-10 text-white" />
                       </div>
 
                       {/* Content */}
                       <div className="flex-1 min-w-0">
                         {/* Category Badge */}
-                        <div className="mb-3">
-                          <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                        <div className="mb-4">
+                          <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold ${
                             service.theme === 'uk' ? 'bg-red-100 text-red-800' :
                             service.theme === 'usa' ? 'bg-blue-100 text-blue-800' :
                             'bg-gray-100 text-gray-800'
@@ -544,21 +544,21 @@ const Services = () => {
                         </div>
 
                         {/* Title and Description */}
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">{service.title}</h3>
-                        <p className="text-gray-600 mb-4 leading-relaxed">{service.description}</p>
+                        <h3 className="text-3xl font-bold text-gray-900 mb-4">{service.title}</h3>
+                        <p className="text-lg text-gray-600 mb-6 leading-relaxed max-w-4xl">{service.description}</p>
 
                         {/* Timeframe */}
-                        <div className="flex items-center text-sm text-blue-600 mb-4">
-                          <Clock className="h-4 w-4 mr-2" />
+                        <div className="flex items-center text-base text-blue-600 mb-6">
+                          <Clock className="h-5 w-5 mr-3" />
                           <span className="font-medium">{service.timeframe}</span>
                         </div>
 
                         {/* Features Preview */}
-                        <div className="mb-4">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div className="mb-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                             {service.features.map((feature, idx) => (
-                              <div key={idx} className="flex items-center text-sm text-gray-600">
-                                <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                              <div key={idx} className="flex items-center text-base text-gray-600">
+                                <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
                                 <span>{feature}</span>
                               </div>
                             ))}
@@ -573,18 +573,18 @@ const Services = () => {
                               animate={{ opacity: 1, height: 'auto' }}
                               exit={{ opacity: 0, height: 0 }}
                               transition={{ duration: 0.3 }}
-                              className="mb-4 border-t pt-4"
+                              className="mb-6 border-t pt-6"
                             >
                               {/* Required Documents */}
                               <div>
-                                <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                                  <FolderOpen className="h-4 w-4 mr-2 text-blue-600" />
+                                <h4 className="font-semibold text-gray-900 mb-4 flex items-center text-lg">
+                                  <FolderOpen className="h-5 w-5 mr-3 text-blue-600" />
                                   Required Documents:
                                 </h4>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                   {service.documents.map((doc, idx) => (
-                                    <div key={idx} className="flex items-start text-sm text-gray-600">
-                                      <span className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                    <div key={idx} className="flex items-start text-base text-gray-600 bg-gray-50 p-3 rounded-lg">
+                                      <span className="w-3 h-3 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
                                       <span>{doc}</span>
                                     </div>
                                   ))}
@@ -595,21 +595,21 @@ const Services = () => {
                         </AnimatePresence>
 
                         {/* Action Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-3">
+                        <div className="flex flex-col sm:flex-row gap-4">
                           {/* Details Toggle Button */}
                           <button
                             onClick={() => setExpandedService(expandedService === index ? null : index)}
-                            className="flex items-center justify-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-all duration-300"
+                            className="flex items-center justify-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-all duration-300"
                           >
                             {expandedService === index ? (
                               <>
                                 Hide Details
-                                <ChevronUp className="ml-2 h-4 w-4" />
+                                <ChevronUp className="ml-2 h-5 w-5" />
                               </>
                             ) : (
                               <>
                                 View Details
-                                <ChevronDown className="ml-2 h-4 w-4" />
+                                <ChevronDown className="ml-2 h-5 w-5" />
                               </>
                             )}
                           </button>
@@ -617,10 +617,10 @@ const Services = () => {
                           {/* CTA Button */}
                           <a
                             href="/contact"
-                            className={`inline-flex items-center justify-center px-6 py-2 bg-gradient-to-r ${getColorClasses(service.color)} text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg`}
+                            className={`inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r ${getColorClasses(service.color)} text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg`}
                           >
                             Get Started
-                            <ArrowRight className="ml-2 h-4 w-4" />
+                            <ArrowRight className="ml-2 h-5 w-5" />
                           </a>
                         </div>
                       </div>
